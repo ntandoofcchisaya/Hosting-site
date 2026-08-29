@@ -19,6 +19,19 @@
     return { 'Content-Type': 'application/json', 'x-auth-token': getToken() || '' };
   }
 
+  /* If a response is 401, the session has expired (e.g. server restarted on
+     Render's ephemeral filesystem). Redirect to login so the user can get a
+     fresh token. */
+  function handleAuthFail(resp) {
+    if (resp.status === 401) {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      window.location.href = '/auth?expired=1';
+      return true;
+    }
+    return false;
+  }
+
   function toast(msg, type = 'ok') {
     const el = $('toast');
     el.textContent = msg;
@@ -69,6 +82,7 @@
   async function loadUsers() {
     try {
       const resp = await fetch('/api/admin/users', { headers: authHeaders() });
+      if (handleAuthFail(resp)) return;
       const data = await resp.json();
       if (!resp.ok) { toast(data.error || 'Failed to load users', 'error'); return; }
 
@@ -168,6 +182,7 @@
   async function loadEngineStatus() {
     try {
       const resp = await fetch('/api/admin/repo-status', { headers: authHeaders() });
+      if (handleAuthFail(resp)) return;
       const data = await resp.json();
       if (!resp.ok) { $('engineStatusText').textContent = 'Error'; return; }
 
@@ -200,6 +215,7 @@
         method: 'POST', headers: authHeaders(),
         body: JSON.stringify({ repoUrl }),
       });
+      if (handleAuthFail(resp)) return;
       const data = await resp.json();
       const msgEl = $('engineMsg');
 
@@ -228,6 +244,7 @@
     if (!confirm('Remove the installed bot engine? All bots will fall back to the lite handler.')) return;
     try {
       const resp = await fetch('/api/admin/repo', { method: 'DELETE', headers: authHeaders() });
+      if (handleAuthFail(resp)) return;
       const data = await resp.json();
       if (resp.ok) { toast('Engine removed'); loadEngineStatus(); }
       else toast(data.error || 'Failed', 'error');
@@ -238,6 +255,7 @@
   async function loadAllBots() {
     try {
       const resp = await fetch('/api/admin/bots', { headers: authHeaders() });
+      if (handleAuthFail(resp)) return;
       const data = await resp.json();
       if (!resp.ok) { toast(data.error || 'Failed to load bots', 'error'); return; }
 

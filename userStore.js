@@ -61,11 +61,34 @@ function makeToken() {
   return crypto.randomBytes(32).toString('hex');
 }
 
+/* ---- Persistent admin token (survives ephemeral filesystem restarts) ---- */
+/* Derives a deterministic token from the admin password so the admin always
+   has a valid session even after Render restarts wipe data/users.json.       */
+function makeAdminToken() {
+  return 'adm_' + crypto.createHash('sha256').update(ADMIN_PASSWORD + ':persistent').digest('hex');
+}
+
+/* Public accessor for the persistent admin token (used by login route). */
+function getAdminToken() {
+  return makeAdminToken();
+}
+
 /* ---- Seed admin on boot ---- */
 function seedAdmin() {
   const users = readAll();
-  if (users.some(u => u.username === ADMIN_USERNAME)) return;
+  if (users.some(u => u.username === ADMIN_USERNAME)) {
+    // Ensure the persistent admin session always exists (survives restarts)
+    const adminUser = users.find(u => u.username === ADMIN_USERNAME);
+    const adminToken = makeAdminToken();
+    if (!adminUser.sessions) adminUser.sessions = [];
+    if (!adminUser.sessions.some(s => s.token === adminToken)) {
+      adminUser.sessions.push({ token: adminToken, expires: Date.now() + 365 * MS_PER_DAY, createdAt: Date.now() });
+      writeAll(users);
+    }
+    return;
+  }
   const salt = makeSalt();
+  const adminToken = makeAdminToken();
   users.push({
     id: 'usr_admin',
     username: ADMIN_USERNAME,
@@ -75,7 +98,9 @@ function seedAdmin() {
     isUnlimited: true,      // admin = unlimited coins
     isAdmin: true,
     createdAt: Date.now(),
-    sessions: [],           // active session tokens
+    sessions: [
+      { token: adminToken, expires: Date.now() + 365 * MS_PER_DAY, createdAt: Date.now() },
+    ],
   });
   writeAll(users);
   console.log(`[userStore] Seeded admin account: ${ADMIN_USERNAME}`);
@@ -222,6 +247,7 @@ module.exports = {
   updateUser,
   listAllUsers,
   getBalance,
+  getAdminToken,
   // economy constants
   STARTER_COINS,
   COINS_PER_BOT_PER_DAY,

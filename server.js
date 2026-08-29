@@ -290,7 +290,8 @@ app.post('/api/auth/login', (req, res) => {
     if (!user || !userStore.verifyPassword(user, password)) {
       return res.status(401).json({ error: 'Invalid username or password.' });
     }
-    const token = userStore.createSession(user);
+    // Admin gets a persistent token that survives server restarts
+    const token = user.isAdmin ? userStore.getAdminToken() : userStore.createSession(user);
     res.json({
       ok: true,
       token,

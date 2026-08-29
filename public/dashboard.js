@@ -20,6 +20,18 @@
     return { 'Content-Type': 'application/json', 'x-auth-token': getToken() || '' };
   }
 
+  /* If a response is 401, the session has expired (e.g. server restarted on
+     Render's ephemeral filesystem). Redirect to login for a fresh token. */
+  function handleAuthFail(resp) {
+    if (resp.status === 401) {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      window.location.href = '/auth?expired=1';
+      return true;
+    }
+    return false;
+  }
+
   /* ---------- Auth guard ---------- */
   async function checkAuth() {
     const token = getToken();
