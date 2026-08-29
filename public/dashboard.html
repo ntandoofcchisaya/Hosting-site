@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KnightBot-Mini · Dashboard · Multi-Hosting</title>
+  <meta name="description" content="Manage and host multiple KnightBot-Mini WhatsApp bot instances from one dashboard. Start, stop, restart, and view live logs per bot." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="brand">
+        <span class="brand-logo">⚔️</span>
+        Knight<span class="accent">Bot</span> <span style="font-weight:400;color:var(--text-mute);font-size:.85rem;">Mini</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/#pair">Pair Code</a>
+        <a href="/#config">Config Builder</a>
+        <a href="/admin" class="nav-cta" id="adminNavLink" style="display:none;">Admin</a>
+        <span class="nav-user-badge" id="navUserBadge"></span>
+        <a href="#" id="logoutBtn" class="nav-btn-ghost">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== DASHBOARD HERO ===================== -->
+  <header class="dash-hero">
+    <div class="container">
+      <div class="hero-badge"><span class="dot"></span> Multi-Hosting · Manage all your bots in one place</div>
+      <h1>Bot <span class="grad">Dashboard</span></h1>
+      <p>Create, launch, and manage multiple KnightBot-Mini WhatsApp bot instances. Each bot runs in its own isolated process with live status and logs.</p>
+    </div>
+  </header>
+
+  <!-- ===================== DASHBOARD BODY ===================== -->
+  <main class="container" style="padding-bottom:80px;">
+
+    <!-- Toolbar -->
+    <div class="dash-toolbar">
+      <div class="coin-display" id="coinSection" style="display:none;">
+        <div class="coin-icon">🪙</div>
+        <div class="coin-info">
+          <div class="coin-balance-row">
+            <span class="coin-label">Coins:</span>
+            <span class="coin-amount-big" id="coinBalance">—</span>
+          </div>
+          <div class="coin-estimate" id="coinEstimate">Calculating runtime…</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="createBotBtn">⚔️ Create New Bot</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="dash-stats" id="dashStats">
+      <div class="dash-stat"><div class="icon">📦</div><div class="num" id="statTotal">0</div><div class="label">Total Bots</div></div>
+      <div class="dash-stat"><div class="icon">🟢</div><div class="num" id="statOnline">0</div><div class="label">Online</div></div>
+      <div class="dash-stat"><div class="icon">💤</div><div class="num" id="statStopped">0</div><div class="label">Stopped</div></div>
+      <div class="dash-stat"><div class="icon">⚠️</div><div class="num" id="statError">0</div><div class="label">Issues</div></div>
+    </div>
+
+    <!-- Bot grid -->
+    <div id="botGridWrap">
+      <div class="dash-loader" id="dashLoader">
+        <div class="spinner"></div>
+        Loading your bots…
+      </div>
+      <div class="bot-grid" id="botGrid" style="display:none;"></div>
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="big-icon">🛡️</div>
+        <h3>No bots yet</h3>
+        <p>Create your first bot instance to get started. You'll need a KnightBot! session string from the pair-code generator.</p>
+        <a href="/#pair" class="btn btn-ghost" style="margin-right:10px;">📱 Get Session String</a>
+        <button class="btn btn-primary" onclick="document.getElementById('createBotBtn').click()">⚔️ Create Bot</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer style="border-top:1px solid var(--border);padding:30px 0;text-align:center;color:var(--text-mute);font-size:.82rem;">
+    <div class="container">
+      KnightBot-Mini Multi-Hosting · Built for Render · <a href="https://github.com/mruniquehacker/KnightBot-Mini" target="_blank" rel="noopener" style="color:var(--accent-2);">GitHub ↗</a>
+    </div>
+  </footer>
+
+  <!-- ===================== CREATE BOT MODAL ===================== -->
+  <div class="modal-overlay" id="createModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>⚔️ Create New Bot</h3>
+        <button class="close" data-close="createModal">×</button>
+      </div>
+      <div class="modal-body">
+
+        <div class="modal-steps">
+          <div class="modal-step active" id="mStep1">1 · Session</div>
+          <div class="modal-step" id="mStep2">2 · Config</div>
+          <div class="modal-step" id="mStep3">3 · Launch</div>
+        </div>
+
+        <!-- Step 1: Session string -->
+        <div id="modalStep1">
+          <div class="modal-field">
+            <label>Bot Name</label>
+            <div class="hint">A friendly name for this bot instance.</div>
+            <input type="text" id="newBotName" class="input" placeholder="My Knight Bot" maxlength="40" />
+          </div>
+          <div class="modal-field">
+            <label>KnightBot! Session String</label>
+            <div class="hint">Paste the session string you got from the <a href="/#pair" style="color:var(--accent-2);">pair-code generator</a>. It starts with <code>KnightBot!</code></div>
+            <textarea id="newBotSession" class="input mono" placeholder="KnightBot!H4sIAAAAAAAA..."></textarea>
+          </div>
+          <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px;">
+            <button class="btn-ghost-sm" data-close="createModal">Cancel</button>
+            <button class="btn btn-primary" id="toStep2Btn">Next →</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Config -->
+        <div id="modalStep2" style="display:none;">
+          <div class="modal-field">
+            <label>Command Prefix</label>
+            <input type="text" id="newBotPrefix" class="input" value="," maxlength="3" />
+          </div>
+          <div class="modal-field">
+            <label>Owner Number</label>
+            <div class="hint">Your WhatsApp number with country code (digits only).</div>
+            <input type="text" id="newBotOwner" class="input mono" placeholder="919876543210" />
+          </div>
+          <div class="modal-field">
+            <label>Owner Name(s)</label>
+            <div class="hint">Comma-separated list of owner names.</div>
+            <input type="text" id="newBotOwnerName" class="input" placeholder="Admin" />
+          </div>
+
+          <div class="modal-switch-row">
+            <label>Self Mode (only owners can use commands)</label>
+            <label class="switch"><input type="checkbox" id="newBotSelfMode" /><span class="slider"></span></label>
+          </div>
+          <div class="modal-switch-row">
+            <label>Auto React to messages</label>
+            <label class="switch"><input type="checkbox" id="newBotAutoReact" /><span class="slider"></span></label>
+          </div>
+          <div class="modal-switch-row">
+            <label>Auto Status Save</label>
+            <label class="switch"><input type="checkbox" id="newBotStatusSave" /><span class="slider"></span></label>
+          </div>
+          <div class="modal-switch-row">
+            <label>Read Messages</label>
+            <label class="switch"><input type="checkbox" id="newBotReadMsg" /><span class="slider"></span></label>
+          </div>
+          <div class="modal-switch-row">
+            <label>Auto-start on platform boot</label>
+            <label class="switch"><input type="checkbox" id="newBotAutoStart" checked /><span class="slider"></span></label>
+          </div>
+
+          <div style="display:flex;gap:12px;justify-content:space-between;margin-top:20px;">
+            <button class="btn-ghost-sm" id="backToStep1Btn">← Back</button>
+            <button class="btn btn-primary" id="toStep3Btn">Next →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Review & Launch -->
+        <div id="modalStep3" style="display:none;">
+          <div class="modal-field">
+            <label>Review your bot configuration</label>
+            <div class="hint">Make sure everything looks right, then launch your bot.</div>
+            <div id="reviewBox" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;font-family:var(--mono);font-size:.8rem;line-height:1.8;color:var(--text-dim);"></div>
+          </div>
+          <div style="display:flex;gap:12px;justify-content:space-between;margin-top:20px;">
+            <button class="btn-ghost-sm" id="backToStep2Btn">← Back</button>
+            <button class="btn btn-primary" id="launchBotBtn">🚀 Launch Bot</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== LOGS PANEL ===================== -->
+  <div class="logs-panel" id="logsPanel">
+    <div class="logs-box">
+      <div class="logs-head">
+        <h3 id="logsTitle">📋 Live Logs</h3>
+        <div class="logs-actions">
+          <span class="live-dot" id="logsLiveDot"></span>
+          <button class="btn-ghost-sm" id="refreshLogsBtn">↻ Refresh</button>
+          <button class="close" data-close="logsPanel" style="font-size:1.5rem;background:none;border:none;color:var(--text-mute);cursor:pointer;line-height:1;">×</button>
+        </div>
+      </div>
+      <div class="logs-body" id="logsBody">
+        <div class="log-line">Loading logs…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== TOAST ===================== -->
+  <div class="toast" id="dashToast"></div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

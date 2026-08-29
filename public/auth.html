@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — KnightBot-Mini Hosting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="brand">
+        <div class="brand-logo">🏰</div>
+        KnightBot<span class="accent">Mini</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="/#features">Features</a>
+        <a href="/#how">How it Works</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/auth" class="nav-btn-primary">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="brand-logo big">🏰</div>
+        <h1 id="authTitle">Welcome Back</h1>
+        <p id="authSubtitle">Sign in to manage your WhatsApp bots</p>
+      </div>
+
+      <!-- Tab switcher -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" data-mode="login">Login</button>
+        <button class="auth-tab" id="tabRegister" data-mode="register">Register</button>
+      </div>
+
+      <form id="authForm" class="auth-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" required minlength="3" />
+          <small class="field-hint" id="usernameHint">Letters, numbers, and underscores. Min 3 characters.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required minlength="4" />
+          <small class="field-hint">Minimum 4 characters.</small>
+        </div>
+
+        <div class="form-group" id="confirmGroup" style="display:none;">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your password" autocomplete="new-password" />
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">Login</button>
+
+        <div class="auth-error" id="authError" style="display:none;"></div>
+        <div class="auth-success" id="authSuccess" style="display:none;"></div>
+      </form>
+
+      <div class="auth-footer">
+        <p id="switchText">Don't have an account? <a href="#" id="switchLink">Register free</a></p>
+        <p class="starter-info">🎁 New accounts get <strong>50 free coins</strong> (5 bot-days)</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      'use strict';
+      const TOKEN_KEY = 'kb_auth_token';
+      const USER_KEY = 'kb_user';
+      const $ = (id) => document.getElementById(id);
+      let mode = 'login';
+
+      // If already logged in, redirect
+      const existingToken = localStorage.getItem(TOKEN_KEY);
+      if (existingToken) {
+        window.location.href = '/dashboard';
+        return;
+      }
+
+      function setMode(m) {
+        mode = m;
+        $('tabLogin').classList.toggle('active', m === 'login');
+        $('tabRegister').classList.toggle('active', m === 'register');
+        $('authTitle').textContent = m === 'login' ? 'Welcome Back' : 'Create Your Account';
+        $('authSubtitle').textContent = m === 'login' ? 'Sign in to manage your WhatsApp bots' : 'Register for free and start hosting bots';
+        $('submitBtn').textContent = m === 'login' ? 'Login' : 'Create Account';
+        $('confirmGroup').style.display = m === 'register' ? 'block' : 'none';
+        $('usernameHint').style.display = m === 'register' ? 'block' : 'none';
+        $('switchText').innerHTML = m === 'login'
+          ? 'Don\'t have an account? <a href="#" id="switchLink">Register free</a>'
+          : 'Already have an account? <a href="#" id="switchLink">Login</a>';
+        bindSwitch();
+        hideMessages();
+      }
+
+      function bindSwitch() {
+        $('switchLink')?.addEventListener('click', (e) => {
+          e.preventDefault();
+          setMode(mode === 'login' ? 'register' : 'login');
+        });
+      }
+
+      function showMsg(elId, msg) {
+        const el = $(elId);
+        el.textContent = msg;
+        el.style.display = 'block';
+      }
+      function hideMessages() {
+        $('authError').style.display = 'none';
+        $('authSuccess').style.display = 'none';
+      }
+
+      // Tab clicks
+      $('tabLogin').addEventListener('click', () => setMode('login'));
+      $('tabRegister').addEventListener('click', () => setMode('register'));
+      bindSwitch();
+
+      // Form submit
+      $('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideMessages();
+
+        const username = $('username').value.trim();
+        const password = $('password').value;
+
+        if (mode === 'register') {
+          const confirm = $('confirmPassword').value;
+          if (password !== confirm) {
+            showMsg('authError', 'Passwords do not match.');
+            return;
+          }
+        }
+
+        $('submitBtn').disabled = true;
+        $('submitBtn').textContent = mode === 'login' ? 'Signing in…' : 'Creating account…';
+
+        try {
+          const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+          const resp = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+          });
+          const data = await resp.json();
+
+          if (!resp.ok || !data.ok) {
+            showMsg('authError', data.error || 'Something went wrong. Please try again.');
+            $('submitBtn').disabled = false;
+            $('submitBtn').textContent = mode === 'login' ? 'Login' : 'Create Account';
+            return;
+          }
+
+          // Save token + user
+          localStorage.setItem(TOKEN_KEY, data.token);
+          localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+
+          showMsg('authSuccess', mode === 'login' ? 'Login successful! Redirecting…' : 'Account created! Redirecting…');
+
+          // Redirect based on role
+          setTimeout(() => {
+            if (data.user.isAdmin) {
+              window.location.href = '/admin';
+            } else {
+              window.location.href = '/dashboard';
+            }
+          }, 800);
+        } catch (err) {
+          showMsg('authError', 'Network error. Please check your connection and try again.');
+          $('submitBtn').disabled = false;
+          $('submitBtn').textContent = mode === 'login' ? 'Login' : 'Create Account';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

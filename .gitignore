@@ -1,0 +1,8 @@
+node_modules/
+.env
+.DS_Store
+*.log
+npm-debug.log*
+kb_auth_*
+data/
+knightbot-engine/

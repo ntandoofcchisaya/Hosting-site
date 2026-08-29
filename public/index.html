@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KnightBot-Mini · Host & Deploy on Render</title>
+  <meta name="description" content="Deploy KnightBot-Mini WhatsApp bot on Render in minutes. Generate your pair code, build your config, and launch your bot 24/7 for free." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="#" class="brand">
+        <span class="brand-logo">⚔️</span>
+        Knight<span class="accent">Bot</span> <span style="font-weight:400;color:var(--text-mute);font-size:.85rem;">Mini</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#features">Features</a>
+        <a href="#pair">Pair Code</a>
+        <a href="#config">Config Builder</a>
+        <a href="#deploy">Deploy</a>
+        <a href="https://github.com/mruniquehacker/KnightBot-Mini" target="_blank" rel="noopener">GitHub</a>
+        <span class="nav-user-badge" id="navUserBadge" style="display:none;"></span>
+        <a href="/admin" class="nav-cta" id="adminNavLink" style="display:none;margin-right:8px;">Admin</a>
+        <a href="/dashboard" class="nav-cta" style="margin-right:8px;" id="dashboardNavLink">Dashboard</a>
+        <a href="/auth" class="nav-cta" id="signInNavLink">Sign In</a>
+        <a href="#" id="logoutNavLink" class="nav-btn-ghost" style="display:none;">Logout</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge"><span class="dot"></span> Multi-Hosting Platform · Run multiple bots · Deployable on Render</div>
+      <h1>Host <span class="grad">KnightBot-Mini</span><br/>on Render in minutes</h1>
+      <p class="lead">Your WhatsApp bot, your rules. Generate a pairing code, build your config, and launch bots 24/7 — now with a full multi-hosting dashboard to manage multiple bot instances from one place. No terminal, no headaches.</p>
+      <div class="hero-cta">
+        <a href="#pair" class="btn btn-primary">⚔️ Generate Pair Code</a>
+        <a href="/dashboard" class="btn btn-ghost">📊 Open Dashboard</a>
+        <a href="#deploy" class="btn btn-ghost">🚀 Deploy Guide</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">1.1k★</div><div class="label">GitHub Stars</div></div>
+        <div class="stat"><div class="num">2.3k</div><div class="label">Forks</div></div>
+        <div class="stat"><div class="num">24/7</div><div class="label">Uptime</div></div>
+        <div class="stat"><div class="num">$0</div><div class="label">Free Tier</div></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== FEATURES ===================== -->
+  <section id="features">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-tag">Why KnightBot-Mini</div>
+        <h2>A fast, lightweight WhatsApp MD bot</h2>
+        <p>Built on the Baileys library and engineered for stability, KnightBot-Mini gives you full control with modular commands and easy customization.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔓</div>
+          <h3>Fully Open Source</h3>
+          <p>The entire codebase is editable. Fork it, rebrand it, host it anywhere — Render, Heroku, a VPS, or a panel. No permission required.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧩</div>
+          <h3>Modular Commands</h3>
+          <p>Commands live in the <span style="font-family:var(--mono);color:var(--accent-2);">commands/</span> folder. Add, edit, or remove features without ever touching the core engine.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>RAM-Optimized</h3>
+          <p>Streaming media handling, temp cleanup, and bounded in-memory stores keep the bot light — perfect for Render's 512MB free tier.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3>Easy Customization</h3>
+          <p>Change the bot image, prefix, name, and newsletter via simple in-chat commands. Or use our Config Builder before you deploy.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔗</div>
+          <h3>Pair-Code Login</h3>
+          <p>No QR scanning in a terminal. Generate a pairing code here, link your WhatsApp via Linked Devices, and get a session string instantly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>Group Protection</h3>
+          <p>Antilink, antitag, antibadword, welcome/goodbye, anticall and more — a complete moderation toolkit right out of the box.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Multi-Hosting Dashboard</h3>
+          <p>Run <b>multiple bot instances</b> from one dashboard. Create, start, stop, and restart each bot independently — every bot gets its own isolated process and session.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Live Logs &amp; Auto-Restart</h3>
+          <p>Watch real-time logs per bot from the dashboard. Bots that crash unexpectedly auto-restart themselves, so your WhatsApp stays online around the clock.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAIR CODE GENERATOR ===================== -->
+  <section id="pair" class="pair-section">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-tag">Step 1 · Get Session</div>
+        <h2>Generate your pair code</h2>
+        <p>Enter your WhatsApp number to receive a pairing code. Link your device in WhatsApp → Linked Devices, and we'll hand you a <span style="font-family:var(--mono);color:var(--accent-2);">KnightBot!...</span> session string.</p>
+      </div>
+
+      <div class="pair-wrap">
+        <div class="pair-card">
+          <div class="pair-steps">
+            <div class="pair-step active" id="step1">1 · Enter number</div>
+            <div class="pair-step" id="step2">2 · Link device</div>
+            <div class="pair-step" id="step3">3 · Get session</div>
+          </div>
+
+          <!-- Step 1: Phone input -->
+          <div id="pairStep1">
+            <div class="form-group">
+              <label for="phone">WhatsApp Number</label>
+              <div class="hint">Use your full number with country code. No <code>+</code>, spaces, or dashes. Example: <code>919876543210</code></div>
+              <div class="phone-prefix">
+                <input type="tel" id="phone" class="input" placeholder="919876543210" inputmode="numeric" />
+                <span class="flag">📱</span>
+              </div>
+            </div>
+            <button id="requestPairBtn" class="btn btn-primary" style="width:100%;">
+              Request Pairing Code
+            </button>
+            <p style="text-align:center;color:var(--text-mute);font-size:.8rem;margin-top:14px;">
+              Your number is only used to request a WhatsApp pairing code. Nothing is stored.
+            </p>
+          </div>
+
+          <!-- Step 2: Pair code display -->
+          <div class="pair-code-box" id="pairCodeBox">
+            <div class="label">Your pairing code — enter this in WhatsApp</div>
+            <div class="pair-code" id="pairCode">------</div>
+            <div class="instr">
+              1. Open <b>WhatsApp</b> on your phone<br/>
+              2. Go to <b>Settings → Linked Devices → Link a Device</b><br/>
+              3. Tap <b>"Link with phone number instead"</b><br/>
+              4. Enter the code above &nbsp;·&nbsp; Waiting for you to link…
+            </div>
+            <div class="spinner" id="pairSpinner" style="margin:16px auto 0;"></div>
+          </div>
+
+          <!-- Step 3: Session string -->
+          <div class="session-result" id="sessionResult">
+            <div class="ok-banner">
+              <span style="font-size:1.3rem;">✅</span>
+              <div>Device linked successfully! Your session string is ready below.</div>
+            </div>
+            <div class="form-group">
+              <label>Session String <span style="color:var(--text-mute);font-weight:400;">(paste into <code>SESSION_ID</code> env var)</span></label>
+              <div class="code-block">
+                <div class="code-head">
+                  <span class="file">SESSION_ID</span>
+                  <button class="copy-btn" id="copySessionBtn">📋 Copy</button>
+                </div>
+                <pre id="sessionString" style="white-space:pre-wrap;word-break:break-all;color:var(--accent-2);"></pre>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              <a href="#deploy" class="btn btn-gold btn-sm" onclick="markStep(3,true)">Next: Deploy on Render →</a>
+              <button class="btn btn-ghost btn-sm" id="newPairBtn">Start over</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="warning">
+          <span style="font-size:1.2rem;">⚠️</span>
+          <div>This is unofficial software not affiliated with WhatsApp. Using third-party bots may violate WhatsApp's Terms of Service and could lead to your account being banned. Use at your own risk. The developers are not responsible for any bans or damages.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONFIG BUILDER ===================== -->
+  <section id="config">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-tag">Step 2 · Customize</div>
+        <h2>Build your config</h2>
+        <p>Set your bot's identity, owner, and behavior. We'll generate the <span style="font-family:var(--mono);color:var(--accent-2);">config.js</span> and the exact environment variables you need for Render.</p>
+      </div>
+
+      <div class="config-grid">
+        <!-- Form -->
+        <div class="config-form">
+          <div class="form-group">
+            <label for="cfgBotName">Bot Name</label>
+            <input id="cfgBotName" class="input" value="Knight Bot Mini" />
+          </div>
+          <div class="form-group">
+            <label for="cfgPrefix">Command Prefix</label>
+            <div class="hint">The character users type before commands.</div>
+            <input id="cfgPrefix" class="input mono" value="," maxlength="3" />
+          </div>
+          <div class="form-group">
+            <label for="cfgOwner">Owner Number</label>
+            <div class="hint">Your WhatsApp number (digits only, with country code). Controls who can run owner-only commands.</div>
+            <input id="cfgOwner" class="input mono" placeholder="919876543210" />
+          </div>
+          <div class="form-group">
+            <label for="cfgOwnerName">Owner Name</label>
+            <input id="cfgOwnerName" class="input" value="Knight Bot" />
+          </div>
+          <div class="form-group">
+            <label for="cfgSession">Session String</label>
+            <div class="hint">Paste the <code>KnightBot!...</code> string from Step 1 (optional here — you can also set it as <code>SESSION_ID</code> on Render).</div>
+            <textarea id="cfgSession" class="textarea mono" placeholder="KnightBot!H4....."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="cfgPack">Sticker Pack Name</label>
+            <input id="cfgPack" class="input" value="Knight Bot" />
+          </div>
+
+          <div style="margin-top:26px;">
+            <div style="font-size:.88rem;font-weight:600;margin-bottom:6px;">Behavior Toggles</div>
+            <div class="toggle-row">
+              <div class="t-label">Auto Read<span class="sub">Mark incoming messages as read</span></div>
+              <label class="switch"><input type="checkbox" id="cfgAutoRead" /><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="t-label">Auto Typing<span class="sub">Show typing indicator on commands</span></div>
+              <label class="switch"><input type="checkbox" id="cfgAutoTyping" /><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="t-label">Auto Bio<span class="sub">Set bot status to "Active 24/7"</span></div>
+              <label class="switch"><input type="checkbox" id="cfgAutoBio" /><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="t-label">Auto React<span class="sub">React to commands with ⏳</span></div>
+              <label class="switch"><input type="checkbox" id="cfgAutoReact" /><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="t-label">Self Mode<span class="sub">Private mode — only owner can use commands</span></div>
+              <label class="switch"><input type="checkbox" id="cfgSelfMode" /><span class="slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live preview -->
+        <div class="config-preview">
+          <div class="code-block">
+            <div class="code-head">
+              <span class="file">📄 config.js</span>
+              <button class="copy-btn" id="copyConfigBtn">📋 Copy config.js</button>
+            </div>
+            <pre id="configPreview"></pre>
+          </div>
+
+          <div style="margin-top:18px;">
+            <div class="code-block">
+              <div class="code-head">
+                <span class="file">🔐 Render Environment Variables</span>
+                <button class="copy-btn" id="copyEnvBtn">📋 Copy all</button>
+              </div>
+              <pre id="envPreview" style="max-height:200px;"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DEPLOY GUIDE ===================== -->
+  <section id="deploy" class="deploy-section">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-tag">Step 3 · Go Live</div>
+        <h2>Deploy to Render</h2>
+        <p>Render runs your bot as a Node web service on a free instance. Follow these steps and you'll have a 24/7 bot online in minutes.</p>
+      </div>
+
+      <div class="deploy-grid">
+        <div class="deploy-card">
+          <div class="deploy-num">1</div>
+          <div>
+            <h3>Fork the repository</h3>
+            <p>Create your own copy of KnightBot-Mini under your GitHub account.</p>
+            <a href="https://github.com/mruniquehacker/KnightBot-Mini/fork" target="_blank" rel="noopener">→ Fork on GitHub</a>
+          </div>
+        </div>
+        <div class="deploy-card">
+          <div class="deploy-num">2</div>
+          <div>
+            <h3>Sign in to Render</h3>
+            <p>Create a free Render account and connect your GitHub account so Render can see your fork.</p>
+            <a href="https://dashboard.render.com/register" target="_blank" rel="noopener">→ Render Dashboard</a>
+          </div>
+        </div>
+        <div class="deploy-card">
+          <div class="deploy-num">3</div>
+          <div>
+            <h3>Create a Web Service</h3>
+            <p>In Render, click <b>New → Web Service</b>, select your KnightBot-Mini fork, and use these settings:</p>
+            <p style="margin-top:8px;">
+              <span class="inline-code">Build: npm install</span><br/>
+              <span class="inline-code">Start: node index.js</span><br/>
+              <span class="inline-code">Plan: Free</span>
+            </p>
+          </div>
+        </div>
+        <div class="deploy-card">
+          <div class="deploy-num">4</div>
+          <div>
+            <h3>Add environment variables</h3>
+            <p>In the <b>Environment</b> tab, add <span class="inline-code">SESSION_ID</span> with your <code>KnightBot!...</code> session string from Step 1. Optionally add the other vars from the Config Builder above.</p>
+          </div>
+        </div>
+        <div class="deploy-card">
+          <div class="deploy-num">5</div>
+          <div>
+            <h3>Deploy</h3>
+            <p>Click <b>Create Web Service</b>. Render installs dependencies and starts your bot. Watch the logs — you'll see <span class="inline-code">✅ Bot connected successfully!</span></p>
+          </div>
+        </div>
+        <div class="deploy-card">
+          <div class="deploy-num">6</div>
+          <div>
+            <h3>Keep it alive (optional)</h3>
+            <p>Render's free tier sleeps after inactivity. Use a free uptime monitor like <a href="https://uptimerobot.com" target="_blank" rel="noopener">UptimeRobot</a> to ping your bot's URL every 5 minutes.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="deploy-banner">
+        <h3>Prefer one-click deploy?</h3>
+        <p>Use Render's blueprint. Add the <span style="font-family:var(--mono);color:var(--accent-2);">render.yaml</span> below to your fork's root, then import the repo into Render.</p>
+        <div style="text-align:left;max-width:680px;margin:0 auto 24px;">
+          <div class="code-block">
+            <div class="code-head">
+              <span class="file">📄 render.yaml</span>
+              <button class="copy-btn" id="copyYamlBtn">📋 Copy</button>
+            </div>
+            <pre id="yamlPreview"></pre>
+          </div>
+        </div>
+        <a href="https://dashboard.render.com/blueprints" target="_blank" rel="noopener" class="btn btn-gold">🚀 Import Blueprint on Render</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MULTI-HOSTING CTA ===================== -->
+  <section id="multihost" style="padding:70px 0;">
+    <div class="container">
+      <div style="background:linear-gradient(135deg,rgba(124,92,255,.12),rgba(245,185,66,.06));border:1px solid var(--border);border-radius:var(--radius);padding:48px;text-align:center;">
+        <div class="section-tag" style="margin-bottom:14px;">New · Multi-Hosting Platform</div>
+        <h2 style="font-size:2.1rem;font-weight:800;margin-bottom:14px;">Manage all your bots in <span class="grad">one dashboard</span></h2>
+        <p style="color:var(--text-dim);max-width:620px;margin:0 auto 28px;font-size:1.05rem;">Create multiple KnightBot-Mini instances, each with its own WhatsApp session and config. Start, stop, restart, and monitor live logs — all from a single web interface. Perfect for hosting bots for friends, clients, or multiple numbers.</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+          <a href="/dashboard" class="btn btn-primary">📊 Open Dashboard</a>
+          <a href="#pair" class="btn btn-ghost">⚔️ Get a Session String</a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px;max-width:680px;margin-left:auto;margin-right:auto;">
+          <div><div style="font-size:2rem;font-weight:800;color:var(--accent-2);">∞</div><div style="color:var(--text-mute);font-size:.82rem;">Unlimited bots</div></div>
+          <div><div style="font-size:2rem;font-weight:800;color:var(--green);">24/7</div><div style="color:var(--text-mute);font-size:.82rem;">Auto-restart on crash</div></div>
+          <div><div style="font-size:2rem;font-weight:800;color:var(--gold);">Live</div><div style="color:var(--text-mute);font-size:.82rem;">Real-time logs</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand" style="font-size:1.1rem;"><span class="brand-logo" style="width:32px;height:32px;font-size:1rem;">⚔️</span> Knight<span class="accent">Bot</span> Mini</div>
+          <p>Your bot. Your rules. A fast, lightweight WhatsApp MD bot built on Baileys — deployable anywhere.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#features">Features</a>
+          <a href="#pair">Pair Code</a>
+          <a href="#config">Config Builder</a>
+          <a href="/dashboard">Dashboard</a>
+          <a href="#deploy">Deploy Guide</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="https://github.com/mruniquehacker/KnightBot-Mini" target="_blank" rel="noopener">GitHub Repo</a>
+          <a href="https://github.com/mruniquehacker/KnightBot-Mini/blob/main/Readme.md" target="_blank" rel="noopener">Readme</a>
+          <a href="https://render.com/docs" target="_blank" rel="noopener">Render Docs</a>
+          <a href="#health" id="statusLink">Status</a>
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <a href="https://t.me/+3QhFUZHx-nhhZmY1" target="_blank" rel="noopener">Telegram</a>
+          <a href="https://whatsapp.com/channel/0029Va90zAnIHphOuO8Msp3A" target="_blank" rel="noopener">WhatsApp Channel</a>
+          <a href="https://github.com/mruniquehacker" target="_blank" rel="noopener">Author</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 KnightBot-Mini Hosting · Built for the community · MIT License</div>
+        <div class="socials">
+          <a href="https://github.com/mruniquehacker/KnightBot-Mini" target="_blank" rel="noopener" title="GitHub">🐙</a>
+          <a href="https://t.me/+3QhFUZHx-nhhZmY1" target="_blank" rel="noopener" title="Telegram">✈️</a>
+          <a href="https://whatsapp.com/channel/0029Va90zAnIHphOuO8Msp3A" target="_blank" rel="noopener" title="WhatsApp">💬</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"><span class="ic">✓</span><span id="toastMsg">Copied!</span></div>
+
+  <script>
+    // Auth-aware navbar
+    (function () {
+      var token = localStorage.getItem('kb_auth_token');
+      var user = null;
+      try { user = JSON.parse(localStorage.getItem('kb_user')); } catch (_) {}
+      if (token && user) {
+        var signIn = document.getElementById('signInNavLink');
+        var logout = document.getElementById('logoutNavLink');
+        var admin = document.getElementById('adminNavLink');
+        var badge = document.getElementById('navUserBadge');
+        if (signIn) signIn.style.display = 'none';
+        if (logout) logout.style.display = 'inline-block';
+        if (badge) { badge.textContent = '👤 ' + user.username; badge.style.display = 'inline-block'; }
+        if (admin && user.isAdmin) admin.style.display = 'inline-block';
+        if (logout) logout.addEventListener('click', function (e) {
+          e.preventDefault();
+          fetch('/api/auth/logout', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-auth-token': token }, body: '{}' });
+          localStorage.removeItem('kb_auth_token');
+          localStorage.removeItem('kb_user');
+          window.location.reload();
+        });
+      }
+    })();
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

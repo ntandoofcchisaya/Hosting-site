@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — KnightBot-Mini Hosting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="brand">
+        <div class="brand-logo">🏰</div>
+        KnightBot<span class="accent">Mini</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/admin" class="nav-btn-primary">Admin</a>
+        <span class="nav-user-badge" id="navUserBadge"></span>
+        <a href="#" id="logoutBtn" class="nav-btn-ghost">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="admin-page">
+    <div class="container">
+      <!-- Admin header -->
+      <div class="admin-header">
+        <div>
+          <h1>🛡️ Admin Panel</h1>
+          <p class="page-subtitle">Manage users, coins, bot engine, and all bot instances</p>
+        </div>
+        <div class="admin-badge">
+          <span class="admin-pill">Unlimited Coins</span>
+          <span class="admin-pill green">Admin Access</span>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-value" id="statUsers">—</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🤖</div>
+          <div class="stat-value" id="statBots">—</div>
+          <div class="stat-label">Total Bots</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-value" id="statRunning">—</div>
+          <div class="stat-label">Running Now</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📦</div>
+          <div class="stat-value" id="statEngine">—</div>
+          <div class="stat-label">Engine Status</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="users">Users & Coins</button>
+        <button class="admin-tab" data-tab="engine">Bot Engine</button>
+        <button class="admin-tab" data-tab="bots">All Bots</button>
+      </div>
+
+      <!-- Tab: Users -->
+      <section class="admin-section" id="sectionUsers">
+        <div class="section-header">
+          <h2>User Management</h2>
+          <button class="btn-small" id="refreshUsers">🔄 Refresh</button>
+        </div>
+        <div class="table-wrap">
+          <table class="admin-table" id="usersTable">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Coins</th>
+                <th>Unlimited</th>
+                <th>Admin</th>
+                <th>Joined</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersBody">
+              <tr><td colspan="6" class="loading-cell">Loading users…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tab: Engine -->
+      <section class="admin-section" id="sectionEngine" style="display:none;">
+        <div class="section-header">
+          <h2>Bot Engine Installation</h2>
+        </div>
+        <div class="engine-card">
+          <div class="engine-status" id="engineStatus">
+            <div class="engine-status-row">
+              <span class="engine-label">Status:</span>
+              <span id="engineStatusText">Checking…</span>
+            </div>
+            <div class="engine-status-row" id="engineDetails" style="display:none;">
+              <span class="engine-label">Package:</span>
+              <span id="enginePkg"></span>
+            </div>
+            <div class="engine-status-row" id="enginePathRow" style="display:none;">
+              <span class="engine-label">Path:</span>
+              <code id="enginePath"></code>
+            </div>
+          </div>
+
+          <div class="engine-install">
+            <h3>Install from GitHub Repository</h3>
+            <p class="engine-desc">Clone a WhatsApp bot engine repository. The engine will be used by all bot workers. This replaces any previously installed engine.</p>
+            <div class="engine-form">
+              <input type="text" id="repoUrl" placeholder="https://github.com/user/bot-engine-repo" />
+              <button class="btn-submit" id="installRepoBtn">Install Engine</button>
+            </div>
+            <div class="engine-preset">
+              <span>Quick install:</span>
+              <button class="btn-tiny" data-repo="https://github.com/mruniquehacker/KnightBot-Mini">KnightBot-Mini</button>
+            </div>
+            <div class="engine-msg" id="engineMsg" style="display:none;"></div>
+            <div class="engine-actions">
+              <button class="btn-small danger" id="removeRepoBtn">Remove Engine</button>
+              <button class="btn-small" id="refreshEngineBtn">🔄 Check Status</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab: Bots -->
+      <section class="admin-section" id="sectionBots" style="display:none;">
+        <div class="section-header">
+          <h2>All Bot Instances</h2>
+          <button class="btn-small" id="refreshBots">🔄 Refresh</button>
+        </div>
+        <div class="table-wrap">
+          <table class="admin-table" id="botsTable">
+            <thead>
+              <tr>
+                <th>Bot Name</th>
+                <th>Owner</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="botsBody">
+              <tr><td colspan="5" class="loading-cell">Loading bots…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="/admin.js"></script>
+</body>
+</html>
